@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "fair_solutions_demos"
+version = "0.1.0"
+description = "Streamlit multipage demo app managed with Poetry"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.11"
+streamlit = "^1.25.0"
+requests = "^2.31.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
