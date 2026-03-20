@@ -37,6 +37,7 @@ def get_metadata_from_datacite(doi):
             abstract = d.get("description")
             break
     
+    print(data)
 
     return {
         "source": "DataCite",
