@@ -8,6 +8,7 @@ from steps.fair_publication.step_3_pdf import render_step_3_pdf
 from steps.fair_publication.step_4_claims import render_step_4
 from steps.fair_publication.step_5_nanopublication import render_step_5
 from steps.fair_publication.step_6_enrichment import render_step_6
+from steps.fair_publication.step_7_fdo import render_step_7
 
 logger = setup_logger("app")
 
@@ -36,8 +37,14 @@ def render_publication_flow() -> None:
                 nanopublications_result = st.session_state.get("nanopublications_result")
 
                 if nanopublications_result and "error" not in nanopublications_result:
-                    st.divider
+                    st.divider()
                     render_step_6(logger)
+
+                enrichment_result = st.session_state.get("enrichment_result")
+
+                if enrichment_result and "error" not in enrichment_result:
+                    st.divider()
+                    render_step_7(logger)
 
     elif resource_type == "pdf":
         render_step_3_pdf()
