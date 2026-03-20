@@ -20,9 +20,10 @@ st.sidebar.title("Menu")
 if st.sidebar.button("🏠 Overview", use_container_width=True):
     st.session_state["selected_page"] = "Overview"
 
+"""
 if st.sidebar.button("1️⃣ FAIR Solution #1", use_container_width=True):
     st.session_state["selected_page"] = "FAIR Solution #1"
-
+"""
 if st.sidebar.button("2️⃣ FAIR Solution #2", use_container_width=True):
     st.session_state["selected_page"] = "FAIR Solution #2"
 
