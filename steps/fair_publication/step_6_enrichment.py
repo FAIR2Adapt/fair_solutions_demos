@@ -49,6 +49,7 @@ def render_step_6(logger) -> None:
                         st.session_state["enrichment_result"] = {"error": str(exc)}
 
         enrichment_result = st.session_state.get("enrichment_result")
+        logger.info(enrichment_result)
 
         if not enrichment_result:
             return
@@ -57,6 +58,49 @@ def render_step_6(logger) -> None:
             st.error(enrichment_result["error"])
             return
 
+        # Normal case: API already returned JSON
+        if isinstance(enrichment_result, dict) and "response" in enrichment_result:
+            data = enrichment_result["response"]
+
+        # Fallback case: API response was not JSON
+        elif isinstance(enrichment_result, dict) and "raw_response" in enrichment_result:
+            st.error("The enrichment service did not return valid JSON.")
+            st.text(enrichment_result["raw_response"])
+            return
+
+        else:
+            st.error("Unexpected enrichment result format.")
+            st.write(enrichment_result)
+            return
+
+        locations = [
+            item["entity"]
+            for item in data.get("entity_locations", [])
+            if item.get("entity")
+        ]
+
+        keywords = [
+            item["key_element"]
+            for item in data.get("ke_phrases", [])
+            if item.get("key_element")
+        ]
+
+        logger.info(keywords)
+
+        topics = [
+            item["topic"]
+            for item in data.get("topic_domains", [])
+            if item.get("topic")
+        ]
+
         st.success("Enrichment completed")
-        st.json(enrichment_result)
+
+        st.subheader("Locations")
+        st.write(", ".join(locations) if locations else "No locations found.")
+
+        st.subheader("Keywords")
+        st.write(", ".join(keywords) if keywords else "No keywords found.")
+
+        st.subheader("Topic Domains")
+        st.write(", ".join(topics) if topics else "No topic domains found.")
 
