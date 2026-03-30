@@ -18,6 +18,7 @@ def render_step_6(logger) -> None:
     with col2:
         if st.button("❌ No", use_container_width=True):
             st.info("User selected NO")
+            st.session_state["upload_file"]="no"
             # add alternative logic here
 
     upload_file = st.session_state.get("upload_file")
@@ -55,7 +56,7 @@ def render_step_6(logger) -> None:
             return
 
         if isinstance(enrichment_result, dict) and "error" in enrichment_result:
-            st.error(enrichment_result["error"])
+            st.error("Error to connect with enrichment service")
             return
 
         # Normal case: API already returned JSON
@@ -103,4 +104,6 @@ def render_step_6(logger) -> None:
 
         st.subheader("Topic Domains")
         st.write(", ".join(topics) if topics else "No topic domains found.")
+    elif upload_file == "no":
+        st.session_state["enrichment_result"] = {"error": "No file uploaded"}
 
