@@ -1,8 +1,8 @@
 import streamlit as st
 
 
-def render_step_2() -> None:
-    st.subheader("Step 2 — Select the resource source")
+def render_step_select_resource() -> None:
+    st.subheader("Step: Select the resource source")
 
     col1, col2 = st.columns(2)
 
