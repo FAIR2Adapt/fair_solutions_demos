@@ -11,6 +11,7 @@ def get_metadata_from_crossref(doi):
         return None
 
     data = r.json()["message"]
+    print(data)
     title = data.get("title", [None])[0]
     abstract = data.get("abstract")  # often None
 
@@ -48,6 +49,7 @@ def get_metadata_from_datacite(doi):
 
 def fetch_doi_metadata(doi: str):
     # Try Crossref first
+
     result = get_metadata_from_crossref(doi)
     if result:
         return result
