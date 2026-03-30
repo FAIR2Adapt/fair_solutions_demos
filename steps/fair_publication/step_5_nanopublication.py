@@ -1,5 +1,6 @@
 import streamlit as st
 from services.nanopublication_service import create_aida_nanopub
+from services.nanopublication_service import publish_nanopublication
 
 def _toggle_visualization(index: int) -> None:
     key = f"show_nanopub_{index}"
@@ -10,6 +11,7 @@ def _publish_nanopublication(logger, index: int, nanopub_data: dict) -> None:
     # Placeholder publish action
     # Replace this with your real publish service call
     logger.info("Publishing nanopublication %s", nanopub_data.get("label", f"#{index + 1}"))
+    publish_nanopublication(logger, nanopub_data)
     st.session_state[f"published_nanopub_{index}"] = True
 
 
