@@ -7,11 +7,12 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = ">3.10"
+python = ">=3.12,<4.0.0"
 streamlit = "^1.25.0"
 requests = "^2.31.0"
 rdflib = "^7.2.1"
 rohub = "^1.2.1"
+nanopub = "2.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
