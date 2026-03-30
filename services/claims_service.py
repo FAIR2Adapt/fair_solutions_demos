@@ -10,6 +10,8 @@ def get_claims(data):
 
     response = requests.post(config.CLAIMS_ENDPOINT, headers=headers, data=data)
 
+    print(response.text)
+
     return response.status_code, response.text
 
 def fetch_claims_from_abstract(abstract: str) -> list[dict]:
