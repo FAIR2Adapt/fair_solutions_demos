@@ -103,6 +103,10 @@ def render_step_4(logger) -> None:
 
     if not claims_result:
         return
+    
+    if "error" in claims_result:
+        st.error("Problem to retrive metadata from DOI")
+        return
 
     if isinstance(claims_result, dict) and "error" in claims_result:
         st.error(claims_result["error"])
