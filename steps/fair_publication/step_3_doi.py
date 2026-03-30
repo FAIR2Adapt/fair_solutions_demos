@@ -3,9 +3,8 @@ import streamlit as st
 from services.doi_service import fetch_doi_metadata
 from utils.fair_publication_state import split_abstract
 
-
-def render_step_3_doi(logger) -> None:
-    st.subheader("Step 3 — Enter the DOI")
+def render_step_doi(logger) -> None:
+    st.subheader("Step: Enter the DOI")
 
     st.text_input(
         "DOI",
@@ -15,6 +14,7 @@ def render_step_3_doi(logger) -> None:
 
     if st.button("Process DOI", use_container_width=True):
         doi = st.session_state.get("doi_value", "").strip()
+        st.session_state["doi"] = doi
 
         if not doi:
             logger.warning("Empty DOI submitted")
@@ -39,7 +39,7 @@ def render_step_3_doi(logger) -> None:
         return
 
     if "error" in doi_result:
-        st.error(doi_result["error"])
+        st.error("Problem to retrive metadata from DOI")
         return
 
     st.success(f"Metadata retrieved from {doi_result['source']}")
