@@ -2,28 +2,28 @@ import streamlit as st
 
 from utils.logging_config import setup_logger
 from steps.fair_publication.step_1_fair_object import render_step_1
-from steps.fair_publication.step_2_resource_source import render_step_2
-from steps.fair_publication.step_3_doi import render_step_3_doi
+from steps.fair_publication.step_2_resource_source import render_step_select_resource
+from steps.fair_publication.step_3_doi import render_step_doi
 
 logger = setup_logger("app")
 
 def render_publication_flow() -> None:
-    st.success("You selected: FAIRify Data")
+    st.success("You selected: FAIRify Publication")
     st.write("Data FAIRification steps will go here.")
     st.write("Operation not allowed in this FAIR Solution")
 
 def render_data_flow() -> None:
-    st.success("You selected: FAIRify Publication")
+    st.success("You selected: FAIRify Data")
     st.write("Data FAIRification steps will go here.")
 
     st.success("You selected: FAIRify Publication")
 
-    render_step_2()
+    render_step_select_resource()
 
     resource_type = st.session_state.get("publication_resource_type")
 
     if resource_type == "doi":
-        render_step_3_doi(logger)
+        render_step_doi(logger)
 
         doi_result = st.session_state.get("doi_result")
 
