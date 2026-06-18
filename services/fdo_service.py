@@ -68,24 +68,52 @@ def generate_CS4_fdo(logger, doi_result, enrichment_result,doi):
 
     license_url_value="https://creativecommons.org/licenses/by/4.0/"
 
+    # connect mvp to RO-Crate
     the_subject=ro_pid
     the_predicate=related_product
     the_object=mvp_id
     ro.add_triple(the_subject=the_subject, the_predicate=the_predicate, the_object=the_object, annotation_id=annotation_id, object_class="URIRef")
 
+    # set mvp type
     the_subject=mvp_id
-    the_predicate=license
-    the_object=license_url_value
+    the_predicate=has_type
+    the_object=Product
     ro.add_triple(the_subject=the_subject, the_predicate=the_predicate, the_object=the_object, annotation_id=annotation_id, object_class="URIRef")
+
+    # Add keywords
+    keywords = "https://schema.org/keywords"
+
+    keyword_values = enrichment_result["response"]["ke_phrases"]
+
+    logger.info("Keywords")
+    logger.info(keyword_values)
+
+    keyword_texts = [
+        item["key_element"].strip()
+        for item in keyword_values
+        if item.get("key_element")
+    ]
+
+    # Optional: remove duplicates while preserving order
+    keyword_texts = list(dict.fromkeys(keyword_texts))
+
+    if keyword_texts:
+        ro.add_triple(
+            the_subject=mvp_id,
+            the_predicate=keywords,
+            the_object=", ".join(keyword_texts),
+            annotation_id=annotation_id
+        )
 
     locations = enrichment_result["response"]["entity_locations"]
     logger.info("Locations")
     logger.info(locations)
     places = [item for item in locations if 'geonames' in item]
 
+    index = 1
     for place in places:
         print(place['entity'], place['geonames'], place['appearances'])
-        index = 1
+        
         spatialCoverage_id1="https://w3id.org/ro-id/"+ro_id+"/spatial/"+str(index)
 
         the_subject=mvp_id
@@ -102,13 +130,13 @@ def generate_CS4_fdo(logger, doi_result, enrichment_result,doi):
         the_predicate=name
         the_object=place['entity']
         ro.add_triple(the_subject=the_subject, the_predicate=the_predicate, the_object=the_object, annotation_id=annotation_id)
-        index = index+1
 
         the_subject=spatialCoverage_id1
         the_predicate=url
         the_object=place["geonames"]
         ro.add_triple(the_subject=the_subject, the_predicate=the_predicate, the_object=the_object, annotation_id=annotation_id, object_class="URIRef")
 
+        index = index + 1
     """
     for location in locations:
         index = 1
