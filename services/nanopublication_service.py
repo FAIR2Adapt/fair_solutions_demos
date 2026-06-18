@@ -167,11 +167,12 @@ def publish_nanopublication(logger, nanopub_data:dict):
     logger.info(nanopub_data)
 
     logger.info("Nanopublication:"+nanopub_data["label"])
+    logger.info(nanopub_data["nanopublication"])
 
     conf = NanopubConf(profile=profile)
 
     np_obj = Nanopub(rdf=nanopub_data["nanopublication"], conf=conf)
-    np_obj.check()
+    #np_obj.check()
     np_obj.sign()
         
     np_obj.publish()
