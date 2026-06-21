@@ -10,6 +10,7 @@ def get_claims(data):
 
     response = requests.post(config.CLAIMS_ENDPOINT, headers=headers, data=data)
 
+    print(data)
     print(response.text)
 
     return response.status_code, response.text
