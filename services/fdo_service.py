@@ -33,8 +33,12 @@ def generate_CS4_fdo(logger, doi_result, enrichment_result,doi):
     ro_research_areas=["Environmental research"]
     ro_description= doi_result["abstract"]
     ro_type="Bibliography-centric Research Object"
-    ro = rohub.ros_create(title=ro_title, research_areas=ro_research_areas, description=ro_description, ros_type=ro_type, access_mode="private"  )
+    ro = rohub.ros_create(title=ro_title, research_areas=ro_research_areas, description=ro_description, ros_type=ro_type, access_mode="public"  )
 
+    logger.info ("Update editors")
+    ro.editors = [config.ROHUB_EDITOR]
+
+    logger.info ("Adding relations")
     # Add the DOI publication as an external resource
     doi_value = doi                     # e.g. 10.xxxx/xxxxx
     doi_url = f"https://doi.org/{doi_value}"
@@ -168,6 +172,12 @@ def generate_CS4_fdo(logger, doi_result, enrichment_result,doi):
         the_object=provenanve_url_value
         ro.add_triple(the_subject=the_subject, the_predicate=the_predicate, the_object=the_object, annotation_id=annotation_id)
 
+    try:
+        logger.info("Update ro")
+        ro.update()
+    except Exception as e:
+        print(type(e))
+        print(e)
     logger.info("task completed")
     return ro_pid
 
