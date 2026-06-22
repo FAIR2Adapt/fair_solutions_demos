@@ -13,8 +13,8 @@ def render_step_1() -> None:
             clear_publication_inputs()
             clear_data_inputs()
 
-    with col2:
-        if st.button("💻 FAIRify Data", use_container_width=True):
-            st.session_state["fair_object"] = "data"
-            clear_publication_inputs()
-            clear_data_inputs()
+    #with col2:
+        #if st.button("💻 FAIRify Data", use_container_width=True):
+        #    st.session_state["fair_object"] = "data"
+        #    clear_publication_inputs()
+        #    clear_data_inputs()
