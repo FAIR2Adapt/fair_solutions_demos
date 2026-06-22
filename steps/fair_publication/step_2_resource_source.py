@@ -12,9 +12,9 @@ def render_step_select_resource() -> None:
             st.session_state.pop("pdf_file", None)
             st.session_state.pop("claims_result", None)
 
-    with col2:
-        if st.button("📄 The resource is described in a PDF", use_container_width=True):
-            st.session_state["publication_resource_type"] = "pdf"
-            st.session_state.pop("doi_value", None)
-            st.session_state.pop("doi_result", None)
-            st.session_state.pop("claims_result", None)
+    #with col2:
+    #    if st.button("📄 The resource is described in a PDF", use_container_width=True):
+    #        st.session_state["publication_resource_type"] = "pdf"
+    #        st.session_state.pop("doi_value", None)
+    #        st.session_state.pop("doi_result", None)
+    #        st.session_state.pop("claims_result", None)
