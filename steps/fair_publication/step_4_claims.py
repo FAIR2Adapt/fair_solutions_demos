@@ -66,7 +66,7 @@ def _render_claim_card(index: int, claim_data: dict) -> None:
 
 
 def render_step_4(logger) -> None:
-    st.subheader("Step 4 — Claim Extraction")
+    st.subheader("Step  — Claim Extraction")
 
     doi_result = st.session_state.get("doi_result", {})
     abstract = doi_result.get("abstract")
