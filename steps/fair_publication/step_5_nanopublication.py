@@ -78,6 +78,8 @@ def render_step_5(logger) -> None:
         with st.spinner("Generation of nanopublication..."):
             try:
                 claims = st.session_state.get("claims_result")
+                logger.info("CLAIMS")
+                logger.info(claims)
 
                 nanopublications = []
                 for claim in claims:
@@ -85,8 +87,13 @@ def render_step_5(logger) -> None:
                         logger.info("Generating nanopublication...")
                         ds, label = create_aida_nanopub(logger, claim)
                         serialized_nanopub = ds.serialize(format="trig")
+                        #serialized_nanopub = ds
+                        
                         logger.info("Nanopublication generated "+str(label))
                         nanopublications.append({"label":label,"nanopublication":serialized_nanopub})
+                        
+                        #logger.info("Nanopublication generated "+str(label))
+                        #nanopublications.append({"label":label,"nanopublication":serialized_nanopub})
 
                 st.session_state["nanopublications_result"] = nanopublications
                 
