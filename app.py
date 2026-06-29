@@ -37,8 +37,8 @@ page = st.session_state["selected_page"]
 
 if page == "Overview":
     overview()
-#elif page == "FAIR Solution #1":
-#    page_fs_1()
+elif page == "FAIR Solution #1":
+    page_fs_1()
 #elif page == "FAIR Solution #2":
 #    page_fs_2()
 #elif page == "FAIR Solution #3":
