@@ -174,26 +174,36 @@ def extract_seanoe_metadata_scrapping(logger, url: str) -> dict:
         license_info = license_text
 
     # Files
+    
     files = []
-    file_extensions = r"\.(zip|csv|txt|nc|json|xml|xlsx?|tsv|gz|tar|pdf|dat)$"
 
-    for a in soup.find_all("a", href=True):
-        href = urljoin(url, a["href"])
-        label = clean(a.get_text(" ", strip=True))
+    table = soup.find("table", id="data-table")
 
-        if (
-            "download" in href.lower()
-            or "download" in (label or "").lower()
-            or re.search(file_extensions, href, re.IGNORECASE)
-        ):
+    if table:
+        tbody = table.find("tbody") or table
+
+        for row in tbody.find_all("tr"):
+            cells = row.find_all("td")
+            if not cells:
+                continue
+
+            # First column = FILE
+            name = clean(cells[0].get_text(" ", strip=True))
+
+            # Download link
+            link = row.find("a", href=True)
+            if not link:
+                continue
+
+            href = urljoin(url, link["href"])
+
             files.append({
-                "name": label,
+                "name": name,
                 "url": href
             })
 
     # Remove duplicate files
     files = list({f["url"]: f for f in files}.values())
-
     return {
         "url": url,
         "doi": doi,
