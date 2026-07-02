@@ -27,11 +27,42 @@ def render_step_url(logger) -> None:
                 elif "sextant" in url:
                     result = extract_sextant_metadata(logger, url)
 
-                logger.info("Metadata")
+                logger.info("Metadata webscrapping")
                 logger.info(result)
                 result_doi = fetch_doi_metadata(result["doi"])
 
+                logger.info("DOI result")
+                logger.info(result_doi)
+
+                result["title"] = result_doi["title"]
                 result["abstract"] = result_doi["abstract"]
+
+                metadata = result_doi.get("metadata", {})
+
+                creators = metadata.get("creators", [])
+
+                result["creators"] = creators
+
+                authors = ", ".join(
+                    creator.get("name", "").replace(",", "")
+                    for creator in creators
+                )
+
+                year = metadata.get("publicationYear", "")
+                title = result_doi.get("title", "")
+                publisher = metadata.get("publisher", "")
+                doi = metadata.get("doi", result.get("doi", ""))
+
+                result["citation_text"] = (
+                    f"{authors} ({year}). "
+                    f"{title}. "
+                    f"{publisher}. "
+                    f"https://doi.org/{doi}."
+                )
+
+                logger.info("Creators")
+                logger.info(result["creators"])
+
                 if "sextant" in url:
                     result["title"] = result_doi["title"]
                     url_value = f"https://doi.org/{result["doi"]}"
