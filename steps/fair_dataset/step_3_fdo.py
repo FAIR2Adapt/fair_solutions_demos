@@ -9,6 +9,23 @@ def render_step_7(logger) -> None:
             try:
                 doi_result = st.session_state["doi_result"]
 
+                creators_text = "\n".join(
+                    f"- {creator.get('name', '').replace(',', '')}"
+                    for creator in doi_result.get("creators", [])
+)
+
+                abstract = doi_result.get("abstract", "")
+
+                doi_result["abstract"] = (
+                    f"{abstract}\n\n"
+                    f"DOI: {doi_result["doi"]}\n\n"
+                    f"Creators: {creators_text}\n\n"
+                    f"Citation: {doi_result["citation_text"]}"
+                )
+
+                logger.info("New abstract")
+                logger.info(doi_result["abstract"])
+
                 result = generate_CS1_fdo(logger, doi_result)
 
                 st.session_state["fdo_generation_result"] = result
