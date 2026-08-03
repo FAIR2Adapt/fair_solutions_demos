@@ -86,8 +86,8 @@ def render_step_5(logger) -> None:
                     if claim["status"] == "approved":
                         logger.info("Generating nanopublication...")
                         ds, label = create_aida_nanopub(logger, claim)
-                        serialized_nanopub = ds.serialize(format="trig")
-                        #serialized_nanopub = ds
+                        #serialized_nanopub = ds.serialize(format="trig")
+                        serialized_nanopub = ds
                         
                         logger.info("Nanopublication generated "+str(label))
                         nanopublications.append({"label":label,"nanopublication":serialized_nanopub})
