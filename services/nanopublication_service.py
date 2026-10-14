@@ -176,4 +176,5 @@ def publish_nanopublication(logger, nanopub_data:dict):
     np_obj.sign()
         
     np_obj.publish()
+    return np_obj.source_uri
     print(f"✓ Published: {np_obj.source_uri}")
