@@ -16,6 +16,7 @@ logger = setup_logger("app")
 
 
 
+
 def render_publication_flow() -> None:
     st.success("You selected: FAIRify Publication")
 
@@ -28,7 +29,7 @@ def render_publication_flow() -> None:
 
         doi_result = st.session_state.get("doi_result")
 
-        # Case 1: DOI metadata retrieved successfully
+        # CASE 1: DOI metadata retrieved successfully
         if doi_result and "error" not in doi_result:
             st.divider()
             render_step_4(logger)
@@ -37,19 +38,33 @@ def render_publication_flow() -> None:
 
             if isinstance(claims_result, list) and claims_result:
 
-                # STEP 5: At least one approved claim
-                if any(
+                has_approved_claims = any(
                     claim.get("status") == "approved"
                     for claim in claims_result
-                ):
+                )
+
+                all_rejected = all(
+                    claim.get("status") == "rejected"
+                    for claim in claims_result
+                )
+
+                # STEP 5: At least one approved claim
+                if has_approved_claims:
                     st.divider()
                     render_step_5(logger)
 
-                # STEP 6: All claims reviewed
-                if all(
-                    claim.get("status") in ("approved", "rejected")
-                    for claim in claims_result
-                ):
+                # Check generated nanopublications
+                nanopublications_result = st.session_state.get(
+                    "nanopublications_result"
+                )
+
+                has_nanopublications = (
+                    isinstance(nanopublications_result, list)
+                    and len(nanopublications_result) > 0
+                )
+
+                # STEP 6: After generation or all rejected
+                if has_nanopublications or all_rejected:
                     st.divider()
                     render_step_6(logger)
 
@@ -65,7 +80,7 @@ def render_publication_flow() -> None:
                 st.divider()
                 render_step_7(logger)
 
-        # Case 2: DOI retrieval failed; manual metadata
+        # CASE 2: DOI retrieval failed - manual metadata
         elif doi_result and "error" in doi_result:
             render_add_metadata_manually(logger)
 
@@ -82,20 +97,34 @@ def render_publication_flow() -> None:
 
                 if isinstance(claims_result, list) and claims_result:
 
-                    # STEP 5: At least one approved claim
-                    if any(
+                    has_approved_claims = any(
                         claim.get("status") == "approved"
                         for claim in claims_result
-                    ):
+                    )
+
+                    all_rejected = all(
+                        claim.get("status") == "rejected"
+                        for claim in claims_result
+                    )
+
+                    # STEP 5: At least one approved claim
+                    if has_approved_claims:
                         st.divider()
                         logger.info("Enter nanopublication generation")
                         render_step_5(logger)
 
-                    # STEP 6: All claims reviewed
-                    if all(
-                        claim.get("status") in ("approved", "rejected")
-                        for claim in claims_result
-                    ):
+                    # Check generated nanopublications
+                    nanopublications_result = st.session_state.get(
+                        "nanopublications_result"
+                    )
+
+                    has_nanopublications = (
+                        isinstance(nanopublications_result, list)
+                        and len(nanopublications_result) > 0
+                    )
+
+                    # STEP 6: After generation or all rejected
+                    if has_nanopublications or all_rejected:
                         st.divider()
                         render_step_6(logger)
 
