@@ -8,7 +8,7 @@ def render_step_doi(logger) -> None:
 
     st.text_input(
         "DOI",
-        placeholder="e.g. 10.5281/zenodo.1234567",
+        placeholder="e.g. 10.1088/1748-9326/ab465f",
         key="doi_value",
     )
 
