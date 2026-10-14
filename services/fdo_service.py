@@ -108,7 +108,8 @@ def generate_CS1_fdo(logger, doi_result):
     logger.info("task completed")
     return ro_pid
 
-def generate_CS4_fdo(logger, doi_result, enrichment_result,doi):
+def generate_CS4_fdo(logger, doi_result, enrichment_result,doi,
+    nanopublications=None):
     logger.info("Generating the FDO")
 
     related_product="https://schema.org/isRelatedTo"
@@ -151,6 +152,27 @@ def generate_CS4_fdo(logger, doi_result, enrichment_result,doi):
         res_type="Publication",                        # or "Paper"
         input_url=doi_url
     )
+
+    # Add nanopublications as external resources
+    for nanopub in nanopublications or []:
+        uri = nanopub.get("uri")
+        label = nanopub.get("label")
+
+        if not uri:
+            continue
+
+        logger.info(
+            "Adding nanopublication as external resource: %s (%s)",
+            label,
+            uri
+        )
+
+        nanopub_res = ro.add_external_resource(
+            res_type="Publication",
+            input_url=uri,
+            title=label
+        )
+
 
     # optional metadata on the resource
     pub_res.title = doi_result.get("title")
