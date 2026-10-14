@@ -15,6 +15,7 @@ from steps.fair_publication.step_add_metadata_manually import render_add_metadat
 logger = setup_logger("app")
 
 
+
 def render_publication_flow() -> None:
     st.success("You selected: FAIRify Publication")
 
@@ -26,35 +27,48 @@ def render_publication_flow() -> None:
         render_step_doi(logger)
 
         doi_result = st.session_state.get("doi_result")
+
+        # Case 1: DOI metadata retrieved successfully
         if doi_result and "error" not in doi_result:
             st.divider()
             render_step_4(logger)
 
             claims_result = st.session_state.get("claims_result")
 
-            if claims_result and "error" not in claims_result:
-                st.divider()
-                render_step_5(logger)
+            if isinstance(claims_result, list) and claims_result:
 
-                nanopublications_result = st.session_state.get("nanopublications_result")
+                # STEP 5: At least one approved claim
+                if any(
+                    claim.get("status") == "approved"
+                    for claim in claims_result
+                ):
+                    st.divider()
+                    render_step_5(logger)
 
-                if nanopublications_result and "error" not in nanopublications_result:
+                # STEP 6: All claims reviewed
+                if all(
+                    claim.get("status") in ("approved", "rejected")
+                    for claim in claims_result
+                ):
                     st.divider()
                     render_step_6(logger)
 
-                enrichment_result = st.session_state.get("enrichment_result")
+            elif isinstance(claims_result, dict) and "error" in claims_result:
+                logger.info("Skip claims extraction process")
+                st.divider()
+                render_step_6(logger)
 
-                if enrichment_result and "error" not in enrichment_result:
-                    st.divider()
-                    render_step_7(logger)
-                elif enrichment_result and "error" in enrichment_result:
-                    st.divider()
-                    render_step_7(logger)
+            # STEP 7: After enrichment
+            enrichment_result = st.session_state.get("enrichment_result")
 
-        elif doi_result and "error"  in doi_result:
-            
+            if enrichment_result:
+                st.divider()
+                render_step_7(logger)
+
+        # Case 2: DOI retrieval failed; manual metadata
+        elif doi_result and "error" in doi_result:
             render_add_metadata_manually(logger)
-            
+
             doi_result = st.session_state.get("doi_result")
 
             if doi_result and "error" not in doi_result:
@@ -64,36 +78,42 @@ def render_publication_flow() -> None:
 
                 claims_result = st.session_state.get("claims_result")
                 logger.info("STEP 4 exit")
-
                 logger.info(claims_result)
 
-                if claims_result and "error" not in claims_result:
-                    st.divider()
-                    logger.info("Enter to claim extraction process")
-                    render_step_5(logger)
+                if isinstance(claims_result, list) and claims_result:
 
-                    nanopublications_result = st.session_state.get("nanopublications_result")
+                    # STEP 5: At least one approved claim
+                    if any(
+                        claim.get("status") == "approved"
+                        for claim in claims_result
+                    ):
+                        st.divider()
+                        logger.info("Enter nanopublication generation")
+                        render_step_5(logger)
 
-                    if nanopublications_result and "error" not in nanopublications_result:
+                    # STEP 6: All claims reviewed
+                    if all(
+                        claim.get("status") in ("approved", "rejected")
+                        for claim in claims_result
+                    ):
                         st.divider()
                         render_step_6(logger)
 
-                    enrichment_result = st.session_state.get("enrichment_result")
-
-                    if enrichment_result and "error" not in enrichment_result:
-                        st.divider()
-                        render_step_7(logger)
-                elif claims_result and "error" in claims_result:
+                elif isinstance(claims_result, dict) and "error" in claims_result:
                     logger.info("Skip claims extraction process")
+                    st.divider()
                     render_step_6(logger)
 
-                    enrichment_result = st.session_state.get("enrichment_result")
+                # STEP 7: After enrichment
+                enrichment_result = st.session_state.get("enrichment_result")
 
-                    if enrichment_result and "error" not in enrichment_result:
-                        st.divider()
-                        render_step_7(logger)
+                if enrichment_result and "error" not in enrichment_result:
+                    st.divider()
+                    render_step_7(logger)
+
     elif resource_type == "pdf":
         render_step_3_pdf()
+
 
 
 def render_data_flow() -> None:
