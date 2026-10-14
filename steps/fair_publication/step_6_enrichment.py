@@ -2,24 +2,17 @@ import streamlit as st
 from services.enrichment_service import enrich_with_pdf
 
 def render_step_6(logger) -> None:
-    st.subheader("Step 6 — Enrichment service")
+    st.subheader("Step — Enrichment service")
 
-    st.write("Do you want to analyze the document to enrich the FDO?")
+    st.info(
+        "We will now proceed with the enrichment of the publication "
+        "metadata."
+    )
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("✅ Yes", use_container_width=True):
-            st.success("User selected YES")
-            st.session_state["upload_file"]="yes"
+    if st.button("Generating enrichment", use_container_width=True):
+        st.session_state["upload_file"]="yes"
             
             # add your logic here
-
-    with col2:
-        if st.button("❌ No", use_container_width=True):
-            st.info("User selected NO")
-            st.session_state["upload_file"]="no"
-            # add alternative logic here
 
     upload_file = st.session_state.get("upload_file")
 
