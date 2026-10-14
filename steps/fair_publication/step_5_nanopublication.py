@@ -79,7 +79,7 @@ def _render_nanopublication_card(logger, index: int, nanopub_data: dict) -> None
 def render_step_5(logger) -> None:
     st.subheader("Step 5 — Nanopublication generation")
 
-    if st.button("Generate Nanopublication", use_container_width=True):
+    if st.button("Generate Nanopublications", use_container_width=True):
         logger.info("Generation of nanopublication")
 
         with st.spinner("Generation of nanopublication..."):
