@@ -12,7 +12,29 @@ def render_step_7(logger) -> None:
                 doi = st.session_state["doi_value"]
                 logger.info(doi)
 
-                result = generate_CS4_fdo(logger, doi_result, enrichment_result, doi)
+                # NEW CODE: collect nanopublication URIs generated in Step 5
+                nanopublications = []
+
+                for key, uri in st.session_state.items():
+                    if key.startswith("published_nanopub_uri_") and uri:
+                        index = key.removeprefix("published_nanopub_uri_")
+
+                        label = st.session_state.get(
+                            f"published_nanopub_label_{index}",
+                            f"Nanopublication {index}"
+                        )
+
+                        nanopublications.append({
+                            "label": label,
+                            "uri": uri
+                        })
+
+                logger.info(
+                    "Published nanopublications to add to FDO: %s",
+                    nanopublications
+                )
+
+                result = generate_CS4_fdo(logger, doi_result, enrichment_result, doi, nanopublications)
 
                 st.session_state["fdo_generation_result"] = result
 
@@ -26,7 +48,11 @@ def render_step_7(logger) -> None:
     if not fdo_generation_result:
         return
 
-    st.success("FDO generated")
+    st.success("FDO generated successfully!")
+
+    st.markdown(
+        f"**FDO URL:** [{fdo_generation_result}]({fdo_generation_result})"
+    )
 
     """
     col1, col2 = st.columns(2)
