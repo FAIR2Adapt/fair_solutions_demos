@@ -2,8 +2,8 @@ import streamlit as st
 
 from views.overview import render as overview
 from views.page_fs_1 import render as page_fs_1
-from views.page_fs_2 import render as page_fs_2
-from views.page_fs_3 import render as page_fs_3
+#from views.page_fs_2 import render as page_fs_2
+#from views.page_fs_3 import render as page_fs_3
 from views.page_fs_4 import render as page_fs_4
 
 st.set_page_config(
@@ -24,11 +24,12 @@ if st.sidebar.button("🏠 Overview", use_container_width=True):
 if st.sidebar.button("1️⃣ FAIR Solution #1", use_container_width=True):
     st.session_state["selected_page"] = "FAIR Solution #1"
 
-if st.sidebar.button("2️⃣ FAIR Solution #2", use_container_width=True):
-    st.session_state["selected_page"] = "FAIR Solution #2"
 
-if st.sidebar.button("3️⃣ FAIR Solution #3", use_container_width=True):
-    st.session_state["selected_page"] = "FAIR Solution #3"
+#if st.sidebar.button("2️⃣ FAIR Solution #2", use_container_width=True):
+#    st.session_state["selected_page"] = "FAIR Solution #2"
+
+#if st.sidebar.button("3️⃣ FAIR Solution #3", use_container_width=True):
+#    st.session_state["selected_page"] = "FAIR Solution #3"
 
 if st.sidebar.button("4️⃣ FAIR Solution #4", use_container_width=True):
     st.session_state["selected_page"] = "FAIR Solution #4"
