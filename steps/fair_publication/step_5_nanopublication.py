@@ -11,13 +11,16 @@ def _publish_nanopublication(logger, index: int, nanopub_data: dict) -> None:
     # Placeholder publish action
     # Replace this with your real publish service call
     logger.info("Publishing nanopublication %s", nanopub_data.get("label", f"#{index + 1}"))
-    publish_nanopublication(logger, nanopub_data)
+    published_uri = publish_nanopublication(logger, nanopub_data)
     st.session_state[f"published_nanopub_{index}"] = True
+    st.session_state[f"published_nanopub_label_{index}"] = nanopub_data.get("label", f"#{index + 1}")
+    st.session_state[f"published_nanopub_uri_{index}"] = published_uri
+    
 
 
 def _render_nanopublication_card(logger, index: int, nanopub_data: dict) -> None:
     label = nanopub_data.get("label", f"Nanopublication {index + 1}")
-    nanopublication_content = nanopub_data.get("nanopublication", "")
+    nanopublication_content = nanopub_data.get("nanopublication_trig", "")
 
     with st.container():
         st.markdown(
@@ -60,14 +63,18 @@ def _render_nanopublication_card(logger, index: int, nanopub_data: dict) -> None
         with col3:
             if st.button("🚀 Publish", key=f"publish_nanopub_{index}", use_container_width=True):
                 _publish_nanopublication(logger, index, nanopub_data)
-                st.success(f"Nanopublication published: {label}")
+                #st.success(f"Nanopublication published: {label}")
 
         if st.session_state.get(f"show_nanopub_{index}", False):
             st.markdown("**Nanopublication content**")
             st.code(str(nanopublication_content), language="turtle")
 
         if st.session_state.get(f"published_nanopub_{index}", False):
-            st.caption("Published")
+            #st.success("Published")
+            nanopub_uri = st.session_state.get(f"published_nanopub_uri_{index}", "")
+            st.success(f"Published: [{nanopub_uri}]({nanopub_uri})")
+            #st.success("Published: "+st.session_state.get(f"published_nanopub_uri_{index}", False))
+        
 
 def render_step_5(logger) -> None:
     st.subheader("Step 5 — Nanopublication generation")
@@ -86,11 +93,11 @@ def render_step_5(logger) -> None:
                     if claim["status"] == "approved":
                         logger.info("Generating nanopublication...")
                         ds, label = create_aida_nanopub(logger, claim)
-                        #serialized_nanopub = ds.serialize(format="trig")
+                        serialized_nanopub_trig = ds.serialize(format="trig")
                         serialized_nanopub = ds
                         
                         logger.info("Nanopublication generated "+str(label))
-                        nanopublications.append({"label":label,"nanopublication":serialized_nanopub})
+                        nanopublications.append({"label":label,"nanopublication":serialized_nanopub,"nanopublication_trig":serialized_nanopub_trig})
                         
                         #logger.info("Nanopublication generated "+str(label))
                         #nanopublications.append({"label":label,"nanopublication":serialized_nanopub})
